@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="es-EC">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#133b48"><meta name="referrer" content="no-referrer">
+  <title>Ice &amp; Crunch · Caja en vivo</title>
+  <link rel="icon" href="/caja/marca.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/caja/caja.css">
+  <script>if(location.protocol==='file:')document.documentElement.classList.add('archivo');</script>
+  <style>
+    #inicio-local{display:none}.archivo body{margin:0;background:#f2f7f6;color:#17343e;font:16px/1.6 system-ui,sans-serif}
+    .archivo body>header,.archivo body>main,.archivo body>dialog{display:none}
+    .archivo #inicio-local{display:block;max-width:520px;margin:12vh auto;padding:28px;background:white;border:1px solid #d8e3e3;border-radius:14px}
+    #inicio-local a{display:inline-block;background:#123743;color:white;padding:9px 16px;border-radius:8px;text-decoration:none}
+  </style>
+</head>
+<body>
+<section id="inicio-local"><h1>Ice &amp; Crunch · Caja en vivo</h1>
+<p>Para iniciar en Windows, abre <strong>INICIAR-CAJA.cmd</strong> desde la carpeta descomprimida y mantén esa ventana abierta. La caja necesita Node.js 24 o superior.</p>
+<p>Si ya iniciaste la caja en esta computadora, puedes abrirla aquí.</p>
+<a href="http://127.0.0.1:8080/">Abrir la caja</a><p>En otros sistemas, consulta LEEME.txt.</p></section>
+<header class="masthead"><div class="contain mast-inner">
+  <a class="brand" href="#caja" id="brand"><img src="/caja/marca.svg" width="41" height="41" alt="">Ice <span>&amp;</span> Crunch</a>
+  <nav class="tabs" aria-label="Secciones de la caja">
+    <button type="button" data-tab="caja" aria-current="page"><i data-icon="pos"></i>Punto de venta</button>
+    <button type="button" data-tab="cierre"><i data-icon="report"></i>Cierre diario</button>
+    <button type="button" data-tab="costos"><i data-icon="costs"></i>Costos y gastos</button>
+  </nav>
+  <div class="connection" id="connection" role="status"><span class="dot"></span><span id="connectionText">Conectando…</span></div>
+</div></header>
+<main class="contain main">
+  <div class="page-head"><div><div class="date-caption" id="calendarCaption"></div><h1 id="pageTitle">Punto de venta</h1></div>
+    <button class="share-btn" type="button" id="share" disabled><i data-icon="share"></i>Compartir vista</button>
+    <span class="view-tag" id="watchTag" hidden><i data-icon="eye"></i>Vista de solo lectura</span>
+  </div>
+  <div class="banner" id="connectionIssue" role="alert" hidden></div>
+  <div class="banner success" id="feedback" role="status" hidden></div>
+  <section id="view-caja" aria-label="Punto de venta">
+    <div class="pos-layout">
+      <section class="catalog-area"><div class="section-heading"><h2>Catálogo de productos</h2><span class="counter-label" id="productCount"></span></div>
+        <label class="search"><i data-icon="search"></i><input id="search" type="search" maxlength="90" placeholder="Buscar un producto…" aria-label="Buscar un producto"></label>
+        <div class="filters" id="filters" role="group" aria-label="Categoría de productos"></div>
+        <div class="products" id="products"></div>
+        <p class="footnote promotion-note">Las promociones se aplican por cada par del mismo producto.</p>
+      </section>
+      <aside class="ticket" aria-labelledby="ticketHeading">
+        <div class="ticket-head"><div class="ticket-title"><span class="ticket-icon"><i data-icon="ticket"></i></span><h2 id="ticketHeading">Ticket actual</h2></div><span id="units" class="units">0 uds.</span></div>
+        <div class="ticket-body"><p class="recent-sale" id="recentSale" role="status" hidden></p>
+          <div id="cart" class="cart"></div>
+          <div class="break-line"></div>
+          <div class="amounts"><div><span>Subtotal</span><b id="regular">$0.00</b></div><div class="discount"><span>Descuento por promoción</span><b id="saving">−$0.00</b></div></div>
+          <div class="total"><span>Total por cobrar</span><strong id="due">$0.00</strong></div>
+          <form id="chargeForm">
+            <fieldset id="methodBox"><legend>Método de pago</legend><div class="segmented"><button data-method="Efectivo" type="button" aria-pressed="true"><i data-icon="cash"></i>Efectivo</button><button data-method="Transferencia" type="button" aria-pressed="false"><i data-icon="transfer"></i>Transferencia</button></div></fieldset>
+            <div class="field" id="paidBox"><label for="paid">Dinero recibido</label><div class="money-input"><span>$</span><input id="paid" type="text" inputmode="decimal" maxlength="12" placeholder="0.00" autocomplete="off"></div></div>
+            <div class="change-line" id="changeBox"><span>Vuelto</span><strong id="change">$0.00</strong></div>
+            <p id="paymentWarning" class="warning" aria-live="polite" hidden></p>
+            <button class="charge" id="charge" type="submit" disabled><i data-icon="check"></i>Registrar cobro</button>
+          </form>
+          <button class="clear-btn" id="clear" type="button" disabled><i data-icon="trash"></i>Vaciar ticket</button>
+          <p class="watch-help" id="watchHelp" hidden>Estás viendo el ticket que prepara la persona en caja.</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+  <section id="view-cierre" hidden>
+    <div class="report-tools"><label class="date-field">Fecha del cierre <input type="date" id="dayReport" required></label>
+      <div class="toolset"><button class="soft-btn" id="csv"><i data-icon="download"></i>Exportar CSV</button><button class="soft-btn owner-only" id="backup"><i data-icon="download"></i>Exportar respaldo</button><button class="soft-btn owner-only" id="import"><i data-icon="upload"></i>Importar respaldo</button><input type="file" id="backupFile" accept=".json,application/json" hidden></div></div>
+    <div class="metrics">
+      <div class="metric featured"><span>Ventas del día</span><strong id="sumSales">$0.00</strong><small id="sumCount">0 cobros</small></div>
+      <div class="metric"><span>Costo de productos</span><strong id="sumCosts">$0.00</strong><small>De las unidades vendidas</small></div>
+      <div class="metric"><span>Gastos adicionales</span><strong id="sumExpenses">$0.00</strong><small>De la fecha seleccionada</small></div>
+      <div class="metric"><span>Ganancia estimada</span><strong id="sumProfit">$0.00</strong><small>Ventas menos costos y gastos</small></div>
+    </div><p class="footnote" id="profitNote"></p>
+    <section class="box"><div class="section-heading"><h2>Historial de cobros</h2><i data-icon="history"></i></div><div id="history"></div></section>
+  </section>
+  <section id="view-costos" hidden><div class="cost-layout">
+    <section class="box"><div class="section-heading"><h2>Costos por unidad</h2></div><p class="explain">Ingresa el costo de producir o comprar cada unidad. Puedes dejar en blanco los costos pendientes.</p>
+      <div class="table-scroll"><table><thead><tr><th>Producto</th><th>Precio de venta</th><th>Costo unitario ($)</th></tr></thead><tbody id="costRows"></tbody></table></div>
+      <button class="dark-btn owner-only" id="saveCosts">Guardar costos</button><p class="footnote">Cada venta conserva el costo registrado al cobrar. Si falta, el cierre usa el costo actual como estimación.</p></section>
+    <section class="box expenses"><div class="section-heading"><h2>Gastos del día</h2></div><label class="date-field">Fecha del gasto <input type="date" id="dayCosts" required></label>
+      <form id="expenseForm" class="owner-only"><div class="field"><label for="expenseText">Descripción</label><input id="expenseText" required maxlength="90" placeholder="Por ejemplo, transporte"></div>
+        <div class="field"><label for="expenseValue">Valor del gasto ($)</label><input id="expenseValue" type="text" inputmode="decimal" maxlength="12" required placeholder="0.00"></div>
+        <button class="dark-btn" id="expenseAdd" type="submit"><i data-icon="plus"></i>Añadir gasto</button></form><div id="expenseList"></div></section>
+  </div></section>
+  <div class="activity" id="activity" role="status" hidden><i data-icon="clock"></i><span><b>Última actividad</b> <span id="lastText"></span></span><time id="lastTime"></time></div>
+</main>
+<dialog id="shareDialog"><div class="dialog-icon"><i data-icon="share"></i></div><button id="closeShare" class="icon-btn dialog-close" aria-label="Cerrar" type="button"><i data-icon="x"></i></button><h2>Compartir vista en vivo</h2><p>La otra persona verá los productos que añadas, el pago y el cierre mientras usas la caja. El enlace da acceso de solo lectura.</p>
+  <label for="shareUrl">Enlace para observar</label><div class="copy-row"><input id="shareUrl" readonly><button class="dark-btn" id="copy" type="button"><i data-icon="copy"></i><span>Copiar</span></button></div>
+  <p class="footnote" id="shareHint"></p><a id="openWatch" class="text-link" target="_blank" rel="noopener noreferrer">Abrir vista de lectura</a><div id="copyStatus" role="status"></div>
+</dialog>
+<script type="module" src="/caja/app.mjs"></script>
+</body></html>
